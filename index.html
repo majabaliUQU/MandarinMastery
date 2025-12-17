@@ -129,7 +129,7 @@
     <main class="flex-grow flex flex-col items-center justify-start pt-8 p-4 max-w-4xl mx-auto w-full">
         
         <!-- FLASHCARDS SECTION -->
-        <div id="flashcards-section" class="w-full max-w-md animate-fade-in block mt-4">
+        <div id="flashcards-section" class="w-full animate-fade-in block mt-4">
             <div class="text-center mb-6">
                 <h2 class="text-2xl font-bold text-gray-800">Vocabulary Flashcards</h2>
                 <p class="text-sm text-gray-500">Front: Symbol & Sound | Back: Meaning</p>
@@ -143,8 +143,8 @@
                     <div class="absolute w-full h-full backface-hidden bg-white border-2 border-gray-100 rounded-2xl flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')]">
                         <span class="absolute top-4 right-4 text-xs font-bold text-[#D32F2F] bg-red-50 px-2 py-1 rounded-full uppercase tracking-wider" id="card-category">Number</span>
                         
-                        <h1 id="card-char" class="chinese-text text-8xl text-gray-800 mb-2">一</h1>
-                        <h2 id="card-pinyin" class="text-3xl text-[#D32F2F] font-bold mb-4 font-mono">yī</h2>
+                        <h1 id="card-char" class="chinese-text text-6xl md:text-8xl text-gray-800 mb-2 transition-all">一</h1>
+                        <h2 id="card-pinyin" class="text-2xl md:text-3xl text-[#D32F2F] font-bold mb-4 font-mono">yī</h2>
                         
                         <!-- Audio Button (Stop propagation to prevent flip when clicking audio) -->
                         <button onclick="event.stopPropagation(); playCurrentCardAudio()" class="w-12 h-12 flex items-center justify-center rounded-full bg-red-50 text-[#D32F2F] hover:bg-[#D32F2F] hover:text-white transition-colors shadow-sm">
@@ -157,7 +157,7 @@
                     <!-- Back (English Only) -->
                     <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-[#D32F2F] text-white rounded-2xl flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
                         <h3 class="text-sm uppercase tracking-widest text-white/60 mb-2">Meaning</h3>
-                        <h3 id="card-meaning" class="text-4xl font-bold mb-6">One</h3>
+                        <h3 id="card-meaning" class="text-2xl md:text-4xl font-bold mb-6 text-center">One</h3>
                     </div>
                 </div>
             </div>
@@ -191,7 +191,7 @@
                     <span class="text-xs font-bold text-[#D32F2F] tracking-widest uppercase">Question</span>
                     <h2 class="text-2xl font-bold mt-2 text-gray-800">What is the meaning of:</h2>
                     <div class="my-6">
-                        <span id="quiz-char" class="chinese-text text-8xl text-gray-800">山</span>
+                        <span id="quiz-char" class="chinese-text text-6xl md:text-8xl text-gray-800">山</span>
                         <div onclick="playCurrentQuizAudio()" class="mt-2 inline-flex items-center gap-2 text-gray-500 hover:text-[#D32F2F] cursor-pointer text-sm font-medium transition-colors">
                             <i class="ph-fill ph-speaker-high"></i> Listen
                         </div>
@@ -238,8 +238,8 @@
                 <input type="text" id="dict-search" onkeyup="filterDictionary()" placeholder="Search English or Pinyin (e.g., 'One', 'Yi')..." class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#D32F2F] focus:ring-0 outline-none transition-all shadow-sm">
             </div>
 
-            <!-- Dictionary Grid -->
-            <div id="dictionary-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Dictionary Grid (Now Single Column for Full Width) -->
+            <div id="dictionary-grid" class="grid grid-cols-1 gap-4">
                 <!-- Injected via JS -->
             </div>
         </div>
@@ -248,7 +248,7 @@
 
     <!-- Footer -->
     <footer class="mt-auto py-6 text-center text-gray-400 text-xs">
-        <p>Based on Grade 1 Middle School Syllabus (Saudi Arabia)</p>
+        <p>Based on Grade 1 Middle School Syllabus (Saudi Arabia) / By: Yousef Jabali</p>
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
@@ -497,6 +497,9 @@
             
             vocab.forEach(item => {
                 const card = document.createElement('div');
+                // Removed grid constraint, full width card.
+                // Removed truncate to show full text.
+                // Adjusted character box width to be flexible.
                 card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:border-red-100 transition-all group dict-item cursor-pointer";
                 card.dataset.search = (item.mean + ' ' + item.pinyin).toLowerCase();
                 
@@ -504,17 +507,17 @@
                 card.onclick = () => speak(item.char);
 
                 card.innerHTML = `
-                    <div class="w-14 h-14 bg-red-50 rounded-lg flex items-center justify-center text-[#D32F2F] shrink-0 group-hover:bg-[#D32F2F] group-hover:text-white transition-colors">
-                        <span class="chinese-text text-3xl select-none">${item.char}</span>
+                    <div class="w-auto min-w-[4rem] p-3 h-auto min-h-[4rem] bg-red-50 rounded-lg flex items-center justify-center text-[#D32F2F] shrink-0 group-hover:bg-[#D32F2F] group-hover:text-white transition-colors">
+                        <span class="chinese-text text-3xl select-none break-all text-center">${item.char}</span>
                     </div>
                     <div class="flex-grow min-w-0">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-gray-800 text-sm md:text-base truncate">${item.mean}</h3>
+                            <h3 class="font-bold text-gray-800 text-base whitespace-normal">${item.mean}</h3>
                         </div>
-                        <p class="text-[#D32F2F] font-mono text-sm font-medium">${item.pinyin}</p>
-                        <span class="text-[10px] text-gray-400 inline-block mt-1">${item.category}</span>
+                        <p class="text-[#D32F2F] font-mono text-sm font-medium whitespace-normal mt-1">${item.pinyin}</p>
+                        <span class="text-[10px] text-gray-400 inline-block mt-2 bg-gray-100 px-2 py-0.5 rounded-full">${item.category}</span>
                     </div>
-                    <div class="text-gray-300 group-hover:text-[#D32F2F] transition-colors">
+                    <div class="text-gray-300 group-hover:text-[#D32F2F] transition-colors pl-2">
                         <i class="ph-fill ph-speaker-high text-xl"></i>
                     </div>
                 `;
@@ -550,7 +553,17 @@
             inner.classList.remove('rotate-y-180');
             isFlipped = false;
             setTimeout(() => {
-                document.getElementById('card-char').innerText = card.char;
+                // Adjust font size for longer sentences
+                const charEl = document.getElementById('card-char');
+                if (card.char.length > 4) {
+                    charEl.classList.remove('text-6xl', 'md:text-8xl');
+                    charEl.classList.add('text-3xl', 'md:text-5xl');
+                } else {
+                    charEl.classList.add('text-6xl', 'md:text-8xl');
+                    charEl.classList.remove('text-3xl', 'md:text-5xl');
+                }
+
+                charEl.innerText = card.char;
                 document.getElementById('card-pinyin').innerText = card.pinyin;
                 document.getElementById('card-meaning').innerText = card.mean;
                 document.getElementById('card-category').innerText = card.category;
@@ -592,7 +605,18 @@
             document.getElementById('quiz-feedback').classList.add('hidden');
             const randIdx = Math.floor(Math.random() * vocab.length);
             currentQuestion = vocab[randIdx];
-            document.getElementById('quiz-char').innerText = currentQuestion.char;
+            
+            // Adjust font size for quiz display as well
+            const quizCharEl = document.getElementById('quiz-char');
+            if(currentQuestion.char.length > 4) {
+                quizCharEl.classList.remove('text-6xl', 'md:text-8xl');
+                quizCharEl.classList.add('text-3xl', 'md:text-5xl');
+            } else {
+                quizCharEl.classList.add('text-6xl', 'md:text-8xl');
+                quizCharEl.classList.remove('text-3xl', 'md:text-5xl');
+            }
+            quizCharEl.innerText = currentQuestion.char;
+
             let options = [currentQuestion];
             while (options.length < 4) {
                 let r = vocab[Math.floor(Math.random() * vocab.length)];
@@ -647,7 +671,10 @@
             grid.innerHTML = '';
             matchedPairs = 0;
             flippedMemoryCards = [];
-            let gameSet = [...vocab].sort(() => Math.random() - 0.5).slice(0, 6);
+            // Filter out long sentences for memory game to keep cards readable
+            const shortVocab = vocab.filter(v => v.char.length <= 4);
+            let gameSet = [...shortVocab].sort(() => Math.random() - 0.5).slice(0, 6);
+            
             let cards = [];
             gameSet.forEach((item, index) => {
                 cards.push({ id: index, type: 'char', content: item.char, pinyin: item.pinyin, item: item });
@@ -660,8 +687,15 @@
                 cardEl.dataset.idx = idx;
                 const content = document.createElement('div');
                 content.className = 'hidden font-bold text-gray-800 select-none';
-                if(card.type === 'char') content.classList.add('chinese-text', 'text-4xl');
-                else content.classList.add('text-sm');
+                
+                // Adjust font size based on content length
+                if(card.type === 'char') {
+                    content.classList.add('chinese-text');
+                    content.classList.add(card.content.length > 2 ? 'text-2xl' : 'text-4xl');
+                } else {
+                    content.classList.add('text-xs', 'md:text-sm');
+                }
+                
                 content.innerText = card.content;
                 const back = document.createElement('div');
                 back.className = 'absolute inset-0 bg-[#D32F2F] rounded-xl flex items-center justify-center';
