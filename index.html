@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandarin Mastery - Grade 1 Review</title>
+    
+    <!-- Fonts: Ma Shan Zheng for Calligraphy style, Roboto for UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --china-red: #D32F2F;
+            --china-gold: #FFD700;
+            --paper-bg: #FEF9E7;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--paper-bg);
+            background-image: radial-gradient(#e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .chinese-text {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        .chinese-sans {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        /* Flip Card Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .card-pop {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-pop:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-gray-800 flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-[#D32F2F] text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="ph-fill ph-scroll text-3xl text-[#FFD700]"></i>
+                <h1 class="text-xl md:text-2xl font-bold tracking-wide">Mandarin<span class="text-[#FFD700]">Mastery</span></h1>
+            </div>
+            <div id="score-board" class="hidden bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">
+                Score: <span id="current-score">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-sm sticky top-[60px] z-40">
+        <div class="max-w-4xl mx-auto flex justify-around md:justify-center md:gap-8">
+            <button onclick="switchMode('flashcards')" class="nav-btn group flex flex-col items-center py-3 px-2 md:px-4 border-b-4 border-transparent hover:border-[#D32F2F] transition-all text-gray-500 hover:text-[#D32F2F] active-mode" data-mode="flashcards">
+                <i class="ph ph-cards text-2xl mb-1 group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs font-semibold">Learn</span>
+            </button>
+            <button onclick="switchMode('quiz')" class="nav-btn group flex flex-col items-center py-3 px-2 md:px-4 border-b-4 border-transparent hover:border-[#D32F2F] transition-all text-gray-500 hover:text-[#D32F2F]" data-mode="quiz">
+                <i class="ph ph-exam text-2xl mb-1 group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs font-semibold">Quiz</span>
+            </button>
+            <button onclick="switchMode('memory')" class="nav-btn group flex flex-col items-center py-3 px-2 md:px-4 border-b-4 border-transparent hover:border-[#D32F2F] transition-all text-gray-500 hover:text-[#D32F2F]" data-mode="memory">
+                <i class="ph ph-brain text-2xl mb-1 group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs font-semibold">Match</span>
+            </button>
+            <!-- New Dictionary Tab -->
+            <button onclick="switchMode('dictionary')" class="nav-btn group flex flex-col items-center py-3 px-2 md:px-4 border-b-4 border-transparent hover:border-[#D32F2F] transition-all text-gray-500 hover:text-[#D32F2F]" data-mode="dictionary">
+                <i class="ph ph-book-bookmark text-2xl mb-1 group-hover:scale-110 transition-transform"></i>
+                <span class="text-xs font-semibold">Dict</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col items-center justify-start pt-8 p-4 max-w-4xl mx-auto w-full">
+        
+        <!-- FLASHCARDS SECTION -->
+        <div id="flashcards-section" class="w-full max-w-md animate-fade-in block mt-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Vocabulary Flashcards</h2>
+                <p class="text-sm text-gray-500">Front: Symbol & Sound | Back: Meaning</p>
+            </div>
+
+            <!-- The Card -->
+            <div class="perspective-1000 w-full h-96 cursor-pointer group" onclick="flipCard()">
+                <div id="flashcard-inner" class="relative w-full h-full text-center transition-transform duration-500 transform-style-3d shadow-xl rounded-2xl">
+                    
+                    <!-- Front (Symbol + Pinyin + Audio) -->
+                    <div class="absolute w-full h-full backface-hidden bg-white border-2 border-gray-100 rounded-2xl flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')]">
+                        <span class="absolute top-4 right-4 text-xs font-bold text-[#D32F2F] bg-red-50 px-2 py-1 rounded-full uppercase tracking-wider" id="card-category">Number</span>
+                        
+                        <h1 id="card-char" class="chinese-text text-8xl text-gray-800 mb-2">一</h1>
+                        <h2 id="card-pinyin" class="text-3xl text-[#D32F2F] font-bold mb-4 font-mono">yī</h2>
+                        
+                        <!-- Audio Button (Stop propagation to prevent flip when clicking audio) -->
+                        <button onclick="event.stopPropagation(); playCurrentCardAudio()" class="w-12 h-12 flex items-center justify-center rounded-full bg-red-50 text-[#D32F2F] hover:bg-[#D32F2F] hover:text-white transition-colors shadow-sm">
+                            <i class="ph-fill ph-speaker-high text-2xl"></i>
+                        </button>
+
+                        <p class="text-gray-400 text-xs mt-6">Tap card to see meaning</p>
+                    </div>
+
+                    <!-- Back (English Only) -->
+                    <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-[#D32F2F] text-white rounded-2xl flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+                        <h3 class="text-sm uppercase tracking-widest text-white/60 mb-2">Meaning</h3>
+                        <h3 id="card-meaning" class="text-4xl font-bold mb-6">One</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex justify-between items-center mt-8 px-4">
+                <button onclick="prevCard()" class="card-pop p-4 bg-white rounded-full shadow-md text-gray-600 hover:text-[#D32F2F] hover:bg-red-50 transition">
+                    <i class="ph-bold ph-arrow-left text-xl"></i>
+                </button>
+                <div class="text-sm font-bold text-gray-400">
+                    <span id="card-idx">1</span> / <span id="total-cards">20</span>
+                </div>
+                <button onclick="nextCard()" class="card-pop p-4 bg-[#D32F2F] rounded-full shadow-lg shadow-red-200 text-white hover:bg-[#b71c1c] transition">
+                    <i class="ph-bold ph-arrow-right text-xl"></i>
+                </button>
+            </div>
+            <div class="text-center mt-4">
+                 <button onclick="shuffleAndReset()" class="text-xs text-gray-400 hover:text-[#D32F2F] underline"><i class="ph-bold ph-shuffle"></i> Reshuffle Deck</button>
+            </div>
+        </div>
+
+        <!-- QUIZ SECTION -->
+        <div id="quiz-section" class="w-full max-w-lg hidden animate-fade-in mt-4">
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 relative overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="absolute top-0 left-0 w-full h-2 bg-gray-100">
+                    <div id="quiz-progress" class="h-full bg-[#D32F2F] transition-all duration-300" style="width: 0%"></div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <span class="text-xs font-bold text-[#D32F2F] tracking-widest uppercase">Question</span>
+                    <h2 class="text-2xl font-bold mt-2 text-gray-800">What is the meaning of:</h2>
+                    <div class="my-6">
+                        <span id="quiz-char" class="chinese-text text-8xl text-gray-800">山</span>
+                        <div onclick="playCurrentQuizAudio()" class="mt-2 inline-flex items-center gap-2 text-gray-500 hover:text-[#D32F2F] cursor-pointer text-sm font-medium transition-colors">
+                            <i class="ph-fill ph-speaker-high"></i> Listen
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <div id="quiz-feedback" class="mt-4 text-center hidden p-3 rounded-lg font-bold"></div>
+                
+                <button id="next-q-btn" onclick="nextQuestion()" class="w-full mt-4 py-3 bg-gray-800 text-white rounded-xl font-bold hover:bg-black hidden transition-colors">
+                    Next Question
+                </button>
+            </div>
+        </div>
+
+        <!-- MEMORY GAME SECTION -->
+        <div id="memory-section" class="w-full max-w-2xl hidden animate-fade-in mt-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Match Character to Meaning</h2>
+                <button onclick="initMemoryGame()" class="text-sm bg-[#D32F2F] text-white px-3 py-1.5 rounded-lg shadow hover:bg-[#b71c1c] transition">Restart</button>
+            </div>
+            
+            <div id="memory-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-3 w-full">
+                <!-- Cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- NEW DICTIONARY SECTION -->
+        <div id="dictionary-section" class="w-full max-w-4xl hidden animate-fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Full Dictionary</h2>
+                    <p class="text-sm text-gray-500">Review all words in one place</p>
+                </div>
+                <span class="text-xs font-bold text-[#D32F2F] bg-red-50 px-3 py-1 rounded-full"><span id="total-dict-count">0</span> Words</span>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="mb-6 relative">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                <input type="text" id="dict-search" onkeyup="filterDictionary()" placeholder="Search English or Pinyin (e.g., 'One', 'Yi')..." class="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#D32F2F] focus:ring-0 outline-none transition-all shadow-sm">
+            </div>
+
+            <!-- Dictionary Grid -->
+            <div id="dictionary-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-6 text-center text-gray-400 text-xs">
+        <p>Based on Grade 1 Middle School Syllabus (Saudi Arabia)</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA ---
+        const vocab = [
+            // Numbers
+            { char: '一', pinyin: 'yī', mean: 'One', category: 'Numbers' },
+            { char: '二', pinyin: 'èr', mean: 'Two', category: 'Numbers' },
+            { char: '三', pinyin: 'sān', mean: 'Three', category: 'Numbers' },
+            { char: '四', pinyin: 'sì', mean: 'Four', category: 'Numbers' },
+            { char: '五', pinyin: 'wǔ', mean: 'Five', category: 'Numbers' },
+            { char: '六', pinyin: 'liù', mean: 'Six', category: 'Numbers' },
+            { char: '七', pinyin: 'qī', mean: 'Seven', category: 'Numbers' },
+            { char: '八', pinyin: 'bā', mean: 'Eight', category: 'Numbers' },
+            { char: '九', pinyin: 'jiǔ', mean: 'Nine', category: 'Numbers' },
+            { char: '十', pinyin: 'shí', mean: 'Ten', category: 'Numbers' },
+            // Nature/Objects
+            { char: '山', pinyin: 'shān', mean: 'Mountain', category: 'Nature' },
+            { char: '月', pinyin: 'yuè', mean: 'Moon', category: 'Nature' },
+            { char: '门', pinyin: 'mén', mean: 'Door', category: 'Objects' },
+            { char: '土', pinyin: 'tǔ', mean: 'Earth / Soil', category: 'Nature' },
+            // Pronouns
+            { char: '我', pinyin: 'wǒ', mean: 'I / Me', category: 'Pronouns' },
+            { char: '你', pinyin: 'nǐ', mean: 'You', category: 'Pronouns' },
+            { char: '您', pinyin: 'nín', mean: 'You (Polite)', category: 'Pronouns' },
+            { char: '他', pinyin: 'tā', mean: 'He', category: 'Pronouns' },
+            { char: '她', pinyin: 'tā', mean: 'She', category: 'Pronouns' },
+            // Plurals
+            { char: '我们', pinyin: 'wǒmen', mean: 'We / Us', category: 'Pronouns' },
+            { char: '你们', pinyin: 'nǐmen', mean: 'You (Plural)', category: 'Pronouns' },
+            { char: '他们', pinyin: 'tāmen', mean: 'They (Male/Mixed)', category: 'Pronouns' },
+            { char: '她们', pinyin: 'tāmen', mean: 'They (Female)', category: 'Pronouns' }
+        ];
+
+        // --- STATE ---
+        let currentMode = 'flashcards';
+        
+        // Flashcard State
+        let flashcardDeck = [];
+        let cardIndex = 0;
+        let isFlipped = false;
+        
+        // Quiz State
+        let quizScore = 0;
+        let currentQuestion = null;
+        let isQuizAnswered = false;
+
+        // Memory State
+        let memoryCards = [];
+        let flippedMemoryCards = [];
+        let matchedPairs = 0;
+
+        // --- SPEECH SYNTHESIS ---
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN'; 
+                utterance.rate = 0.8; 
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.log("TTS not supported");
+            }
+        }
+
+        // --- UTILS ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- NAVIGATION ---
+        function switchMode(mode) {
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-[#D32F2F]', 'text-[#D32F2F]');
+                btn.classList.add('border-transparent', 'text-gray-500');
+                if(btn.dataset.mode === mode) {
+                    btn.classList.add('border-[#D32F2F]', 'text-[#D32F2F]');
+                    btn.classList.remove('border-transparent', 'text-gray-500');
+                }
+            });
+
+            // Hide all sections
+            document.getElementById('flashcards-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.add('hidden');
+            document.getElementById('memory-section').classList.add('hidden');
+            document.getElementById('dictionary-section').classList.add('hidden');
+            document.getElementById('score-board').classList.add('hidden');
+
+            // Show selected section
+            document.getElementById(`${mode}-section`).classList.remove('hidden');
+
+            currentMode = mode;
+
+            // Init specific logic
+            if(mode === 'quiz') {
+                quizScore = 0;
+                document.getElementById('score-board').classList.remove('hidden');
+                updateScore();
+                nextQuestion();
+            } else if (mode === 'memory') {
+                initMemoryGame();
+            } else if (mode === 'dictionary') {
+                renderDictionary();
+            } else {
+                // For flashcards, if it's the first time or we want to reset
+                if (flashcardDeck.length === 0) shuffleAndReset();
+            }
+        }
+
+        // --- DICTIONARY LOGIC ---
+        function renderDictionary() {
+            const grid = document.getElementById('dictionary-grid');
+            grid.innerHTML = ''; // Clear previous
+            document.getElementById('total-dict-count').innerText = vocab.length;
+            
+            vocab.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:border-red-100 transition-all group dict-item cursor-pointer";
+                card.dataset.search = (item.mean + ' ' + item.pinyin).toLowerCase();
+                
+                // Add click event to whole card to play sound
+                card.onclick = () => speak(item.char);
+
+                card.innerHTML = `
+                    <div class="w-14 h-14 bg-red-50 rounded-lg flex items-center justify-center text-[#D32F2F] shrink-0 group-hover:bg-[#D32F2F] group-hover:text-white transition-colors">
+                        <span class="chinese-text text-3xl select-none">${item.char}</span>
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-gray-800 text-sm md:text-base truncate">${item.mean}</h3>
+                        </div>
+                        <p class="text-[#D32F2F] font-mono text-sm font-medium">${item.pinyin}</p>
+                        <span class="text-[10px] text-gray-400 inline-block mt-1">${item.category}</span>
+                    </div>
+                    <div class="text-gray-300 group-hover:text-[#D32F2F] transition-colors">
+                        <i class="ph-fill ph-speaker-high text-xl"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterDictionary() {
+            const query = document.getElementById('dict-search').value.toLowerCase();
+            const items = document.querySelectorAll('.dict-item');
+            
+            items.forEach(item => {
+                if(item.dataset.search.includes(query)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // --- FLASHCARD LOGIC ---
+        function shuffleAndReset() {
+            flashcardDeck = [...vocab];
+            shuffleArray(flashcardDeck);
+            cardIndex = 0;
+            isFlipped = false;
+            updateFlashcardUI();
+        }
+
+        function updateFlashcardUI() {
+            const card = flashcardDeck[cardIndex];
+            const inner = document.getElementById('flashcard-inner');
+            inner.classList.remove('rotate-y-180');
+            isFlipped = false;
+            setTimeout(() => {
+                document.getElementById('card-char').innerText = card.char;
+                document.getElementById('card-pinyin').innerText = card.pinyin;
+                document.getElementById('card-meaning').innerText = card.mean;
+                document.getElementById('card-category').innerText = card.category;
+                document.getElementById('card-idx').innerText = cardIndex + 1;
+                document.getElementById('total-cards').innerText = flashcardDeck.length;
+            }, 150);
+        }
+
+        function flipCard() {
+            const inner = document.getElementById('flashcard-inner');
+            if (isFlipped) inner.classList.remove('rotate-y-180');
+            else inner.classList.add('rotate-y-180');
+            isFlipped = !isFlipped;
+        }
+
+        function playCurrentCardAudio() {
+            const card = flashcardDeck[cardIndex];
+            speak(card.char);
+        }
+
+        function nextCard() {
+            cardIndex = (cardIndex + 1) % flashcardDeck.length;
+            updateFlashcardUI();
+        }
+
+        function prevCard() {
+            cardIndex = (cardIndex - 1 + flashcardDeck.length) % flashcardDeck.length;
+            updateFlashcardUI();
+        }
+
+        // --- QUIZ LOGIC ---
+        function updateScore() {
+            document.getElementById('current-score').innerText = quizScore;
+        }
+
+        function nextQuestion() {
+            isQuizAnswered = false;
+            document.getElementById('next-q-btn').classList.add('hidden');
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            const randIdx = Math.floor(Math.random() * vocab.length);
+            currentQuestion = vocab[randIdx];
+            document.getElementById('quiz-char').innerText = currentQuestion.char;
+            let options = [currentQuestion];
+            while (options.length < 4) {
+                let r = vocab[Math.floor(Math.random() * vocab.length)];
+                if (!options.includes(r)) options.push(r);
+            }
+            options.sort(() => Math.random() - 0.5);
+            const optsContainer = document.getElementById('quiz-options');
+            optsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = `w-full p-4 text-left border-2 border-gray-100 rounded-xl hover:bg-gray-50 hover:border-gray-200 transition-all font-medium text-gray-700`;
+                btn.innerText = opt.mean;
+                btn.onclick = () => checkAnswer(opt, btn);
+                optsContainer.appendChild(btn);
+            });
+            document.getElementById('quiz-progress').style.width = '50%';
+        }
+
+        function checkAnswer(selected, btnElement) {
+            if(isQuizAnswered) return;
+            isQuizAnswered = true;
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.remove('hidden');
+            if(selected === currentQuestion) {
+                btnElement.classList.remove('border-gray-100', 'hover:border-gray-200');
+                btnElement.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedback.innerHTML = `<span class="text-green-600">Correct! Great job.</span>`;
+                feedback.className = "mt-4 text-center p-3 rounded-lg font-bold bg-green-50 border border-green-200";
+                quizScore += 10;
+                speak(currentQuestion.char); 
+            } else {
+                btnElement.classList.remove('border-gray-100', 'hover:border-gray-200');
+                btnElement.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                feedback.innerHTML = `<span class="text-red-600">Oops! It was <b>${currentQuestion.mean}</b></span>`;
+                feedback.className = "mt-4 text-center p-3 rounded-lg font-bold bg-red-50 border border-red-200";
+                const buttons = document.getElementById('quiz-options').children;
+                for(let b of buttons) {
+                    if(b.innerText === currentQuestion.mean) b.classList.add('bg-green-50', 'border-green-500');
+                }
+            }
+            updateScore();
+            document.getElementById('next-q-btn').classList.remove('hidden');
+        }
+
+        function playCurrentQuizAudio() {
+            if(currentQuestion) speak(currentQuestion.char);
+        }
+
+        // --- MEMORY GAME LOGIC ---
+        function initMemoryGame() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            matchedPairs = 0;
+            flippedMemoryCards = [];
+            let gameSet = [...vocab].sort(() => Math.random() - 0.5).slice(0, 6);
+            let cards = [];
+            gameSet.forEach((item, index) => {
+                cards.push({ id: index, type: 'char', content: item.char, pinyin: item.pinyin, item: item });
+                cards.push({ id: index, type: 'mean', content: item.mean, pinyin: item.pinyin, item: item });
+            });
+            cards.sort(() => Math.random() - 0.5);
+            cards.forEach((card, idx) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = `relative h-28 bg-white rounded-xl shadow-md cursor-pointer transform transition-transform duration-300 hover:scale-105 flex items-center justify-center p-2 text-center border-b-4 border-gray-200`;
+                cardEl.dataset.idx = idx;
+                const content = document.createElement('div');
+                content.className = 'hidden font-bold text-gray-800 select-none';
+                if(card.type === 'char') content.classList.add('chinese-text', 'text-4xl');
+                else content.classList.add('text-sm');
+                content.innerText = card.content;
+                const back = document.createElement('div');
+                back.className = 'absolute inset-0 bg-[#D32F2F] rounded-xl flex items-center justify-center';
+                back.innerHTML = '<i class="ph-fill ph-paw-print text-white/30 text-3xl"></i>';
+                cardEl.appendChild(content);
+                cardEl.appendChild(back);
+                cardEl.onclick = () => handleMemoryClick(cardEl, card, content, back);
+                grid.appendChild(cardEl);
+                memoryCards.push({ element: cardEl, data: card });
+            });
+        }
+
+        function handleMemoryClick(element, cardData, contentEl, backEl) {
+            if(flippedMemoryCards.length >= 2 || element.classList.contains('flipped') || element.classList.contains('matched')) return;
+            element.classList.add('flipped', 'border-[#D32F2F]', 'bg-yellow-50');
+            element.classList.remove('border-gray-200', 'bg-white');
+            backEl.classList.add('hidden');
+            contentEl.classList.remove('hidden');
+            if(cardData.type === 'char') speak(cardData.content);
+            flippedMemoryCards.push({ el: element, data: cardData, content: contentEl, back: backEl });
+            if(flippedMemoryCards.length === 2) checkMemoryMatch();
+        }
+
+        function checkMemoryMatch() {
+            const [c1, c2] = flippedMemoryCards;
+            if(c1.data.id === c2.data.id) {
+                matchedPairs++;
+                c1.el.classList.add('matched', 'opacity-50', 'cursor-default');
+                c2.el.classList.add('matched', 'opacity-50', 'cursor-default');
+                c1.el.classList.remove('border-[#D32F2F]');
+                c1.el.classList.add('border-green-500');
+                c2.el.classList.remove('border-[#D32F2F]');
+                c2.el.classList.add('border-green-500');
+                flippedMemoryCards = []; 
+                if(matchedPairs === 6) setTimeout(() => alert("Congratulations! You cleared the board!"), 500);
+            } else {
+                setTimeout(() => {
+                    c1.el.classList.remove('flipped', 'border-[#D32F2F]', 'bg-yellow-50');
+                    c1.el.classList.add('border-gray-200', 'bg-white');
+                    c1.back.classList.remove('hidden');
+                    c1.content.classList.add('hidden');
+                    c2.el.classList.remove('flipped', 'border-[#D32F2F]', 'bg-yellow-50');
+                    c2.el.classList.add('border-gray-200', 'bg-white');
+                    c2.back.classList.remove('hidden');
+                    c2.content.classList.add('hidden');
+                    flippedMemoryCards = [];
+                }, 1000);
+            }
+        }
+
+        window.onload = () => {
+            shuffleAndReset();
+        };
+    </script>
+</body>
+</html>
