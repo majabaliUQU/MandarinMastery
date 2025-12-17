@@ -255,7 +255,7 @@
     <script>
         // --- DATA ---
         const vocab = [
-            // Numbers
+            // 1. Numbers (数字)
             { char: '一', pinyin: 'yī', mean: 'One', category: 'Numbers' },
             { char: '二', pinyin: 'èr', mean: 'Two', category: 'Numbers' },
             { char: '三', pinyin: 'sān', mean: 'Three', category: 'Numbers' },
@@ -266,22 +266,145 @@
             { char: '八', pinyin: 'bā', mean: 'Eight', category: 'Numbers' },
             { char: '九', pinyin: 'jiǔ', mean: 'Nine', category: 'Numbers' },
             { char: '十', pinyin: 'shí', mean: 'Ten', category: 'Numbers' },
-            // Nature/Objects
+
+            // 2. Nature/Basic Words (词语)
             { char: '山', pinyin: 'shān', mean: 'Mountain', category: 'Nature' },
             { char: '月', pinyin: 'yuè', mean: 'Moon', category: 'Nature' },
             { char: '门', pinyin: 'mén', mean: 'Door', category: 'Objects' },
             { char: '土', pinyin: 'tǔ', mean: 'Earth / Soil', category: 'Nature' },
-            // Pronouns
+
+            // 3. Pronouns (人称代词)
             { char: '我', pinyin: 'wǒ', mean: 'I / Me', category: 'Pronouns' },
             { char: '你', pinyin: 'nǐ', mean: 'You', category: 'Pronouns' },
             { char: '您', pinyin: 'nín', mean: 'You (Polite)', category: 'Pronouns' },
             { char: '他', pinyin: 'tā', mean: 'He', category: 'Pronouns' },
             { char: '她', pinyin: 'tā', mean: 'She', category: 'Pronouns' },
-            // Plurals
             { char: '我们', pinyin: 'wǒmen', mean: 'We / Us', category: 'Pronouns' },
             { char: '你们', pinyin: 'nǐmen', mean: 'You (Plural)', category: 'Pronouns' },
             { char: '他们', pinyin: 'tāmen', mean: 'They (Male/Mixed)', category: 'Pronouns' },
-            { char: '她们', pinyin: 'tāmen', mean: 'They (Female)', category: 'Pronouns' }
+            { char: '她们', pinyin: 'tāmen', mean: 'They (Female)', category: 'Pronouns' },
+
+            // 4. Verbs/Copula (是/不/吗)
+            { char: '是', pinyin: 'shì', mean: 'To be / Yes / Is / Am / Are', category: 'Verbs' },
+            { char: '不', pinyin: 'bù', mean: 'No / Not', category: 'Verbs' },
+            { char: '吗', pinyin: 'ma', mean: 'Question Particle (Yes/No)', category: 'Grammar' },
+            // Sentences
+            { char: '他是阿里。', pinyin: 'Tā shì Ālǐ.', mean: 'He is Ali.', category: 'Sentences' },
+            { char: '你是老师吗?', pinyin: 'Nǐ shì lǎoshī ma?', mean: 'Are you a teacher?', category: 'Sentences' },
+            { char: '不是。', pinyin: 'Bú shì.', mean: 'No (it is not).', category: 'Sentences' },
+
+            // 5. Possession (有没有)
+            { char: '有', pinyin: 'yǒu', mean: 'Have / There is', category: 'Verbs' },
+            { char: '没有', pinyin: 'méiyǒu', mean: 'Do not have / There is not', category: 'Verbs' },
+            { char: '给', pinyin: 'gěi', mean: 'Give', category: 'Verbs' },
+            { char: '笔', pinyin: 'bǐ', mean: 'Pen', category: 'Objects' },
+            { char: '词典', pinyin: 'cídiǎn', mean: 'Dictionary', category: 'Objects' },
+            { char: '人', pinyin: 'rén', mean: 'Person', category: 'People' },
+            // Sentences
+            { char: '你有笔吗?', pinyin: 'Nǐ yǒu bǐ ma?', mean: 'Do you have a pen?', category: 'Sentences' },
+            { char: '有,给你。', pinyin: 'Yǒu, gěi nǐ.', mean: 'Yes, here you go.', category: 'Sentences' },
+            { char: '我没有词典。', pinyin: 'Wǒ méi yǒu cídiǎn.', mean: 'I do not have a dictionary.', category: 'Sentences' },
+
+            // 6. School & Places (学校)
+            { char: '学校', pinyin: 'xuéxiào', mean: 'School', category: 'Places' },
+            { char: '公园', pinyin: 'gōngyuán', mean: 'Park', category: 'Places' },
+            { char: '去', pinyin: 'qù', mean: 'Go', category: 'Verbs' },
+            { char: '哪儿', pinyin: 'nǎr', mean: 'Where', category: 'Questions' },
+            { char: '和', pinyin: 'hé', mean: 'And / With', category: 'Grammar' },
+            { char: '学生', pinyin: 'xuéshēng', mean: 'Student', category: 'People' },
+            // Sentences
+            { char: '你们去哪儿?', pinyin: 'Nǐmen qù nǎr?', mean: 'Where are you going?', category: 'Sentences' },
+            { char: '我们去学校。', pinyin: 'Wǒmen qù xuéxiào.', mean: 'We are going to school.', category: 'Sentences' },
+            { char: '阿里和哈迪去公园。', pinyin: 'Ālǐ hé Hādí qù gōngyuán.', mean: 'Ali and Hadi are going to the park.', category: 'Sentences' },
+
+            // 7. People & Relationships (老师)
+            { char: '老师', pinyin: 'lǎoshī', mean: 'Teacher', category: 'People' },
+            { char: '中文', pinyin: 'Zhōngwén', mean: 'Chinese Language', category: 'Study' },
+            { char: '朋友', pinyin: 'péngyou', mean: 'Friend', category: 'People' },
+            { char: '的', pinyin: 'de', mean: 'Possessive Particle (\'s)', category: 'Grammar' },
+            // Sentences
+            { char: '他是你的中文老师吗?', pinyin: 'Tā shì nǐ de Zhōngwén lǎoshī ma?', mean: 'Is he your Chinese teacher?', category: 'Sentences' },
+            { char: '不是,他是我的朋友。', pinyin: 'Bú shì, tā shì wǒ de péngyou.', mean: 'No, he is my friend.', category: 'Sentences' },
+
+            // 8. Family (家庭)
+            { char: '家', pinyin: 'jiā', mean: 'Family / Home', category: 'Family' },
+            { char: '爱', pinyin: 'ài', mean: 'Love', category: 'Verbs' },
+            { char: '爸爸', pinyin: 'bàba', mean: 'Dad / Father', category: 'Family' },
+            { char: '妈妈', pinyin: 'māma', mean: 'Mom / Mother', category: 'Family' },
+            { char: '这', pinyin: 'zhè', mean: 'This', category: 'Grammar' },
+            // Sentences
+            { char: '我爱我家。', pinyin: 'Wǒ ài wǒ jiā.', mean: 'I love my family.', category: 'Sentences' },
+            { char: '这是我的妈妈。', pinyin: 'Zhè shì wǒ de māma.', mean: 'This is my mom.', category: 'Sentences' },
+
+            // 9. Days of Week & Time (星期)
+            { char: '星期一', pinyin: 'xīngqīyī', mean: 'Monday', category: 'Time' },
+            { char: '星期二', pinyin: 'xīngqī\'èr', mean: 'Tuesday', category: 'Time' },
+            { char: '星期三', pinyin: 'xīngqīsān', mean: 'Wednesday', category: 'Time' },
+            { char: '星期四', pinyin: 'xīngqīsì', mean: 'Thursday', category: 'Time' },
+            { char: '星期五', pinyin: 'xīngqīwǔ', mean: 'Friday', category: 'Time' },
+            { char: '星期六', pinyin: 'xīngqīliù', mean: 'Saturday', category: 'Time' },
+            { char: '星期日', pinyin: 'xīngqīrì', mean: 'Sunday', category: 'Time' },
+            { char: '今天', pinyin: 'jīntiān', mean: 'Today', category: 'Time' },
+            { char: '昨天', pinyin: 'zuótiān', mean: 'Yesterday', category: 'Time' },
+            { char: '明天', pinyin: 'míngtiān', mean: 'Tomorrow', category: 'Time' },
+            { char: '几', pinyin: 'jǐ', mean: 'How many / Which', category: 'Questions' },
+            // Sentences
+            { char: '今天星期几?', pinyin: 'Jīntiān xīngqī jǐ?', mean: 'What day is it today?', category: 'Sentences' },
+
+            // 10. Activities (做什么)
+            { char: '做', pinyin: 'zuò', mean: 'Do / Make', category: 'Verbs' },
+            { char: '什么', pinyin: 'shénme', mean: 'What', category: 'Questions' },
+            { char: '呢', pinyin: 'ne', mean: 'And you? (particle)', category: 'Grammar' },
+            { char: '课', pinyin: 'kè', mean: 'Class / Lesson', category: 'Study' },
+            { char: '足球', pinyin: 'zúqiú', mean: 'Football / Soccer', category: 'Sports' },
+            { char: '踢', pinyin: 'tī', mean: 'Kick / Play (with feet)', category: 'Verbs' },
+            // Sentences
+            { char: '星期六你做什么?', pinyin: 'Xīngqīliù nǐ zuò shénme?', mean: 'What do you do on Saturday?', category: 'Sentences' },
+            { char: '我踢足球,你呢?', pinyin: 'Wǒ tī zúqiú, nǐ ne?', mean: 'I play football, and you?', category: 'Sentences' },
+
+            // 11. Food & Drink (吃喝)
+            { char: '吃', pinyin: 'chī', mean: 'Eat', category: 'Food' },
+            { char: '喝', pinyin: 'hē', mean: 'Drink', category: 'Food' },
+            { char: '苹果', pinyin: 'píngguǒ', mean: 'Apple', category: 'Food' },
+            { char: '葡萄', pinyin: 'pútao', mean: 'Grape', category: 'Food' },
+            { char: '水', pinyin: 'shuǐ', mean: 'Water', category: 'Food' },
+            { char: '果汁', pinyin: 'guǒzhī', mean: 'Juice', category: 'Food' },
+            { char: '还是', pinyin: 'háishì', mean: 'Or (in questions)', category: 'Grammar' },
+            { char: '谢谢', pinyin: 'xièxie', mean: 'Thanks', category: 'Polite' },
+            // Sentences
+            { char: '你吃苹果还是葡萄?', pinyin: 'Nǐ chī píngguǒ háishì pútao?', mean: 'Do you eat apples or grapes?', category: 'Sentences' },
+
+            // 12. Hobbies/Likes (喜欢)
+            { char: '喜欢', pinyin: 'xǐhuan', mean: 'Like', category: 'Verbs' },
+            { char: '也', pinyin: 'yě', mean: 'Also / Too', category: 'Grammar' },
+            { char: '橙汁', pinyin: 'chéngzhī', mean: 'Orange Juice', category: 'Food' },
+            // Sentences
+            { char: '我喜欢喝橙汁。', pinyin: 'Wǒ xǐhuan hē chéngzhī.', mean: 'I like drinking orange juice.', category: 'Sentences' },
+            { char: '我也喜欢。', pinyin: 'Wǒ yě xǐhuan.', mean: 'I also like it.', category: 'Sentences' },
+
+            // 13. Adjectives (形容词)
+            { char: '很', pinyin: 'hěn', mean: 'Very', category: 'Adverbs' },
+            { char: '可爱', pinyin: 'kě\'ài', mean: 'Cute / Lovely', category: 'Adjectives' },
+            { char: '小', pinyin: 'xiǎo', mean: 'Small', category: 'Adjectives' },
+            { char: '大', pinyin: 'dà', mean: 'Big', category: 'Adjectives' },
+            { char: '多', pinyin: 'duō', mean: 'Many / Much', category: 'Adjectives' },
+            { char: '熊猫', pinyin: 'xióngmāo', mean: 'Panda', category: 'Animals' },
+            // Sentences
+            { char: '熊猫很可爱。', pinyin: 'Xióngmāo hěn kě\'ài.', mean: 'Pandas are very cute.', category: 'Sentences' },
+
+            // 14. Pets & Measure Words (量词/宠物)
+            { char: '只', pinyin: 'zhī', mean: 'MW for small animals', category: 'Grammar' },
+            { char: '匹', pinyin: 'pǐ', mean: 'MW for horses', category: 'Grammar' },
+            { char: '条', pinyin: 'tiáo', mean: 'MW for long things', category: 'Grammar' },
+            { char: '头', pinyin: 'tóu', mean: 'MW for big animals', category: 'Grammar' },
+            { char: '两', pinyin: 'liǎng', mean: 'Two (used with MW)', category: 'Numbers' },
+            { char: '宠物', pinyin: 'chǒngwù', mean: 'Pet', category: 'Animals' },
+            { char: '猫', pinyin: 'māo', mean: 'Cat', category: 'Animals' },
+            { char: '鸟', pinyin: 'niǎo', mean: 'Bird', category: 'Animals' },
+            { char: '马', pinyin: 'mǎ', mean: 'Horse', category: 'Animals' },
+            // Sentences
+            { char: '你有没有小猫?', pinyin: 'Nǐ yǒu méiyǒu xiǎomāo?', mean: 'Do you have a small cat?', category: 'Sentences' },
+            { char: '我家没有鸟,有一匹马。', pinyin: 'Wǒ jiā méiyǒu niǎo, yǒu yī pǐ mǎ.', mean: 'My family doesn\'t have birds, we have a horse.', category: 'Sentences' }
         ];
 
         // --- STATE ---
