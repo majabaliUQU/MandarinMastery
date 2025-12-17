@@ -143,11 +143,11 @@
                     <div class="absolute w-full h-full backface-hidden bg-white border-2 border-gray-100 rounded-2xl flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')]">
                         <span class="absolute top-4 right-4 text-xs font-bold text-[#D32F2F] bg-red-50 px-2 py-1 rounded-full uppercase tracking-wider" id="card-category">Number</span>
                         
-                        <h1 id="card-char" class="chinese-text text-6xl md:text-8xl text-gray-800 mb-2 transition-all">一</h1>
-                        <h2 id="card-pinyin" class="text-2xl md:text-3xl text-[#D32F2F] font-bold mb-4 font-mono">yī</h2>
+                        <h1 id="card-char" class="chinese-text text-6xl md:text-8xl text-gray-800 mb-2 transition-all text-center">一</h1>
+                        <h2 id="card-pinyin" class="text-2xl md:text-3xl text-[#D32F2F] font-bold mb-4 font-mono text-center">yī</h2>
                         
                         <!-- Audio Button (Stop propagation to prevent flip when clicking audio) -->
-                        <button onclick="event.stopPropagation(); playCurrentCardAudio()" class="w-12 h-12 flex items-center justify-center rounded-full bg-red-50 text-[#D32F2F] hover:bg-[#D32F2F] hover:text-white transition-colors shadow-sm">
+                        <button onclick="event.stopPropagation(); playCurrentCardAudio()" class="w-12 h-12 flex items-center justify-center rounded-full bg-red-50 text-[#D32F2F] hover:bg-[#D32F2F] hover:text-white transition-colors shadow-sm mx-auto">
                             <i class="ph-fill ph-speaker-high text-2xl"></i>
                         </button>
 
@@ -191,7 +191,7 @@
                     <span class="text-xs font-bold text-[#D32F2F] tracking-widest uppercase">Question</span>
                     <h2 class="text-2xl font-bold mt-2 text-gray-800">What is the meaning of:</h2>
                     <div class="my-6">
-                        <span id="quiz-char" class="chinese-text text-6xl md:text-8xl text-gray-800">山</span>
+                        <span id="quiz-char" class="chinese-text text-6xl md:text-8xl text-gray-800 text-center block">山</span>
                         <div onclick="playCurrentQuizAudio()" class="mt-2 inline-flex items-center gap-2 text-gray-500 hover:text-[#D32F2F] cursor-pointer text-sm font-medium transition-colors">
                             <i class="ph-fill ph-speaker-high"></i> Listen
                         </div>
@@ -239,7 +239,7 @@
             </div>
 
             <!-- Dictionary Grid (Now Single Column for Full Width) -->
-            <div id="dictionary-grid" class="grid grid-cols-1 gap-4">
+            <div id="dictionary-grid" class="grid grid-cols-1 gap-3">
                 <!-- Injected via JS -->
             </div>
         </div>
@@ -248,7 +248,7 @@
 
     <!-- Footer -->
     <footer class="mt-auto py-6 text-center text-gray-400 text-xs">
-        <p>Based on Grade 1 Middle School Syllabus (Saudi Arabia) / By: Yousef Jabali</p>
+        <p>Based on Grade 1 Middle School Syllabus (Saudi Arabia)</p>
     </footer>
 
     <!-- JAVASCRIPT LOGIC -->
@@ -409,18 +409,12 @@
 
         // --- STATE ---
         let currentMode = 'flashcards';
-        
-        // Flashcard State
         let flashcardDeck = [];
         let cardIndex = 0;
         let isFlipped = false;
-        
-        // Quiz State
         let quizScore = 0;
         let currentQuestion = null;
         let isQuizAnswered = false;
-
-        // Memory State
         let memoryCards = [];
         let flippedMemoryCards = [];
         let matchedPairs = 0;
@@ -428,9 +422,7 @@
         // --- SPEECH SYNTHESIS ---
         function speak(text) {
             if ('speechSynthesis' in window) {
-                // Cancel any ongoing speech
                 window.speechSynthesis.cancel();
-                
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'zh-CN'; 
                 utterance.rate = 0.8; 
@@ -451,7 +443,6 @@
 
         // --- NAVIGATION ---
         function switchMode(mode) {
-            // Update Tab UI
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('border-[#D32F2F]', 'text-[#D32F2F]');
                 btn.classList.add('border-transparent', 'text-gray-500');
@@ -461,19 +452,15 @@
                 }
             });
 
-            // Hide all sections
             document.getElementById('flashcards-section').classList.add('hidden');
             document.getElementById('quiz-section').classList.add('hidden');
             document.getElementById('memory-section').classList.add('hidden');
             document.getElementById('dictionary-section').classList.add('hidden');
             document.getElementById('score-board').classList.add('hidden');
 
-            // Show selected section
             document.getElementById(`${mode}-section`).classList.remove('hidden');
-
             currentMode = mode;
 
-            // Init specific logic
             if(mode === 'quiz') {
                 quizScore = 0;
                 document.getElementById('score-board').classList.remove('hidden');
@@ -484,40 +471,41 @@
             } else if (mode === 'dictionary') {
                 renderDictionary();
             } else {
-                // For flashcards, if it's the first time or we want to reset
                 if (flashcardDeck.length === 0) shuffleAndReset();
             }
         }
 
-        // --- DICTIONARY LOGIC ---
+        // --- DICTIONARY LOGIC (OPTIMIZED FOR MOBILE) ---
         function renderDictionary() {
             const grid = document.getElementById('dictionary-grid');
-            grid.innerHTML = ''; // Clear previous
+            grid.innerHTML = '';
             document.getElementById('total-dict-count').innerText = vocab.length;
             
             vocab.forEach(item => {
                 const card = document.createElement('div');
-                // Removed grid constraint, full width card.
-                // Removed truncate to show full text.
-                // Adjusted character box width to be flexible.
-                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4 hover:shadow-md hover:border-red-100 transition-all group dict-item cursor-pointer";
-                card.dataset.search = (item.mean + ' ' + item.pinyin).toLowerCase();
+                const isSentence = item.char.length > 4;
                 
-                // Add click event to whole card to play sound
+                // Adjust styling based on content length
+                const textSizeClass = isSentence ? 'text-lg md:text-xl leading-tight' : 'text-3xl md:text-4xl';
+                const boxHeight = isSentence ? 'h-auto py-2' : 'h-16 md:h-20';
+                const boxWidth = isSentence ? 'w-20 md:w-24' : 'w-16 md:w-20';
+
+                card.className = "bg-white p-3 md:p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3 md:gap-4 hover:shadow-md hover:border-red-100 transition-all group dict-item cursor-pointer";
+                card.dataset.search = (item.mean + ' ' + item.pinyin).toLowerCase();
                 card.onclick = () => speak(item.char);
 
                 card.innerHTML = `
-                    <div class="w-auto min-w-[4rem] p-3 h-auto min-h-[4rem] bg-red-50 rounded-lg flex items-center justify-center text-[#D32F2F] shrink-0 group-hover:bg-[#D32F2F] group-hover:text-white transition-colors">
-                        <span class="chinese-text text-3xl select-none break-all text-center">${item.char}</span>
+                    <div class="${boxWidth} ${boxHeight} min-h-[4rem] bg-red-50 rounded-lg flex items-center justify-center text-[#D32F2F] shrink-0 group-hover:bg-[#D32F2F] group-hover:text-white transition-colors">
+                        <span class="chinese-text ${textSizeClass} select-none text-center break-words w-full px-1">${item.char}</span>
                     </div>
-                    <div class="flex-grow min-w-0">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-gray-800 text-base whitespace-normal">${item.mean}</h3>
+                    <div class="flex-grow min-w-0 flex flex-col justify-center">
+                        <h3 class="font-bold text-gray-800 text-sm md:text-base leading-snug whitespace-normal mb-1">${item.mean}</h3>
+                        <p class="text-[#D32F2F] font-mono text-xs md:text-sm font-medium leading-tight whitespace-normal break-words">${item.pinyin}</p>
+                        <div class="mt-1">
+                             <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full inline-block">${item.category}</span>
                         </div>
-                        <p class="text-[#D32F2F] font-mono text-sm font-medium whitespace-normal mt-1">${item.pinyin}</p>
-                        <span class="text-[10px] text-gray-400 inline-block mt-2 bg-gray-100 px-2 py-0.5 rounded-full">${item.category}</span>
                     </div>
-                    <div class="text-gray-300 group-hover:text-[#D32F2F] transition-colors pl-2">
+                    <div class="text-gray-300 group-hover:text-[#D32F2F] transition-colors pl-1 shrink-0">
                         <i class="ph-fill ph-speaker-high text-xl"></i>
                     </div>
                 `;
@@ -528,13 +516,9 @@
         function filterDictionary() {
             const query = document.getElementById('dict-search').value.toLowerCase();
             const items = document.querySelectorAll('.dict-item');
-            
             items.forEach(item => {
-                if(item.dataset.search.includes(query)) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
+                if(item.dataset.search.includes(query)) item.classList.remove('hidden');
+                else item.classList.add('hidden');
             });
         }
 
@@ -553,18 +537,23 @@
             inner.classList.remove('rotate-y-180');
             isFlipped = false;
             setTimeout(() => {
-                // Adjust font size for longer sentences
                 const charEl = document.getElementById('card-char');
-                if (card.char.length > 4) {
-                    charEl.classList.remove('text-6xl', 'md:text-8xl');
-                    charEl.classList.add('text-3xl', 'md:text-5xl');
+                const pinyinEl = document.getElementById('card-pinyin');
+                
+                // Smart sizing for Flashcard
+                if (card.char.length > 8) {
+                     charEl.className = "chinese-text text-3xl md:text-5xl text-gray-800 mb-2 transition-all text-center leading-normal";
+                     pinyinEl.className = "text-lg md:text-xl text-[#D32F2F] font-bold mb-4 font-mono text-center";
+                } else if (card.char.length > 4) {
+                    charEl.className = "chinese-text text-5xl md:text-6xl text-gray-800 mb-2 transition-all text-center";
+                    pinyinEl.className = "text-xl md:text-2xl text-[#D32F2F] font-bold mb-4 font-mono text-center";
                 } else {
-                    charEl.classList.add('text-6xl', 'md:text-8xl');
-                    charEl.classList.remove('text-3xl', 'md:text-5xl');
+                    charEl.className = "chinese-text text-6xl md:text-8xl text-gray-800 mb-2 transition-all text-center";
+                    pinyinEl.className = "text-2xl md:text-3xl text-[#D32F2F] font-bold mb-4 font-mono text-center";
                 }
 
                 charEl.innerText = card.char;
-                document.getElementById('card-pinyin').innerText = card.pinyin;
+                pinyinEl.innerText = card.pinyin;
                 document.getElementById('card-meaning').innerText = card.mean;
                 document.getElementById('card-category').innerText = card.category;
                 document.getElementById('card-idx').innerText = cardIndex + 1;
@@ -606,7 +595,6 @@
             const randIdx = Math.floor(Math.random() * vocab.length);
             currentQuestion = vocab[randIdx];
             
-            // Adjust font size for quiz display as well
             const quizCharEl = document.getElementById('quiz-char');
             if(currentQuestion.char.length > 4) {
                 quizCharEl.classList.remove('text-6xl', 'md:text-8xl');
@@ -671,10 +659,8 @@
             grid.innerHTML = '';
             matchedPairs = 0;
             flippedMemoryCards = [];
-            // Filter out long sentences for memory game to keep cards readable
             const shortVocab = vocab.filter(v => v.char.length <= 4);
             let gameSet = [...shortVocab].sort(() => Math.random() - 0.5).slice(0, 6);
-            
             let cards = [];
             gameSet.forEach((item, index) => {
                 cards.push({ id: index, type: 'char', content: item.char, pinyin: item.pinyin, item: item });
@@ -687,15 +673,12 @@
                 cardEl.dataset.idx = idx;
                 const content = document.createElement('div');
                 content.className = 'hidden font-bold text-gray-800 select-none';
-                
-                // Adjust font size based on content length
                 if(card.type === 'char') {
                     content.classList.add('chinese-text');
                     content.classList.add(card.content.length > 2 ? 'text-2xl' : 'text-4xl');
                 } else {
                     content.classList.add('text-xs', 'md:text-sm');
                 }
-                
                 content.innerText = card.content;
                 const back = document.createElement('div');
                 back.className = 'absolute inset-0 bg-[#D32F2F] rounded-xl flex items-center justify-center';
